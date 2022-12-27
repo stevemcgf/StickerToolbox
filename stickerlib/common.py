@@ -1,6 +1,8 @@
 # Sticker Common Utils
 from pathlib import Path
 import json
+import unicodedata
+import string
 
 class Sticker:
     def __init__(self, id=int(), static=None, animation=None, sound=None):
@@ -132,14 +134,8 @@ class StickerPack:
         self._stickers.append(sticker)
 
 def StickerPackSaver(workdir = Path(), pack_data = StickerPack()):
-    def cleanup_path_name(str):
-        str = str.replace(":", " ")
-        tokens = str.split()
-        out = " ".join(tokens)
-        return out
-
     save_path = workdir
-    save_path /= cleanup_path_name(pack_data.title)
+    save_path /= StickerUtils.cleanup_path_name(pack_data.title)
     
     assert (save_path.exists() == False), "Sticker Pack directory already exists."
 
@@ -245,6 +241,13 @@ def StickerPackLoader(pack_location = Path()):
         pack_data.add_sticker(sticker_data)
 
     return pack_data
+
+class StickerUtils:
+    @staticmethod
+    def cleanup_path_name(str):
+        validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        cleanedFilename = unicodedata.normalize('NFKD', str)
+        return ''.join(c for c in cleanedFilename if c in validFilenameChars)
 
 if __name__ == "__main__":
     pass

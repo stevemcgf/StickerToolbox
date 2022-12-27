@@ -6,6 +6,7 @@ import zipfile
 
 from stickerlib.common import StickerPack
 from stickerlib.common import Sticker
+from stickerlib.common import StickerUtils
 
 MAGIC_DATA = b'nu\x0e\x00{u\xa1t\x80\x81\x00\x00\x00\x00\x00\x00\x00\x00'
 
@@ -46,7 +47,7 @@ class WhatsAppStickerPacker:
         self.save_icon()
     
     def create_zip_file(self):
-        wasticker_name = self.workdir / "{}.wastickers".format(cleanup_file_name(self.pack_data.title))
+        wasticker_name = self.workdir / "{}.wastickers".format(StickerUtils.cleanup_path_name(self.pack_data.title))
         wastickers_file = open(wasticker_name, "wb")
         self.wastickers_zip = zipfile.ZipFile(wastickers_file, mode="x", compression=zipfile.ZIP_DEFLATED)
 
